@@ -47,8 +47,8 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{TRANSLATIONS[state.language].ui.exportPDF}</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-2xl">{TRANSLATIONS[state.language].ui.exportPDF}</CardTitle>
+        <CardDescription className="text-lg">
           {state.language === 'ko'
             ? '원하는 설정을 선택하고 PDF로 내보내세요'
             : 'Configure your preferences and export to PDF'}
@@ -57,7 +57,7 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
       <CardContent className="space-y-6">
         {/* Paper Size */}
         <div className="space-y-3">
-          <Label className="text-base font-semibold">
+          <Label className="text-xl font-semibold">
             {TRANSLATIONS[state.language].ui.paperSize}
           </Label>
           <Select
@@ -66,21 +66,21 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
               setConfig({ ...config, paperSize: value as PDFConfig['paperSize'] })
             }
           >
-            <SelectTrigger>
+            <SelectTrigger className="text-lg h-12">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="A4">A4 (210 × 297 mm)</SelectItem>
-              <SelectItem value="A3">A3 (297 × 420 mm)</SelectItem>
-              <SelectItem value="B4">B4 (250 × 353 mm)</SelectItem>
-              <SelectItem value="Letter">Letter (8.5 × 11 in)</SelectItem>
+              <SelectItem value="A4" className="text-lg">A4 (210 × 297 mm)</SelectItem>
+              <SelectItem value="A3" className="text-lg">A3 (297 × 420 mm)</SelectItem>
+              <SelectItem value="B4" className="text-lg">B4 (250 × 353 mm)</SelectItem>
+              <SelectItem value="Letter" className="text-lg">Letter (8.5 × 11 in)</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         {/* Page Layout */}
         <div className="space-y-3">
-          <Label className="text-base font-semibold">
+          <Label className="text-xl font-semibold">
             {TRANSLATIONS[state.language].ui.pageLayout}
           </Label>
           <RadioGroup
@@ -90,14 +90,14 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
             }
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="single" id="layout-single" />
-              <Label htmlFor="layout-single" className="font-normal cursor-pointer">
+              <RadioGroupItem value="single" id="layout-single" className="w-5 h-5" />
+              <Label htmlFor="layout-single" className="text-lg font-normal cursor-pointer">
                 {state.language === 'ko' ? '단일 페이지 (전체 12개월)' : 'Single Page (All 12 months)'}
               </Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="two-page" id="layout-two" />
-              <Label htmlFor="layout-two" className="font-normal cursor-pointer">
+              <RadioGroupItem value="two-page" id="layout-two" className="w-5 h-5" />
+              <Label htmlFor="layout-two" className="text-lg font-normal cursor-pointer">
                 {state.language === 'ko'
                   ? '2페이지 (1-6월 / 7-12월)'
                   : 'Two Pages (Jan-Jun / Jul-Dec)'}
@@ -107,7 +107,7 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
         </div>
 
         {/* Info about auto page orientation */}
-        <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-md">
+        <div className="text-lg text-gray-600 bg-blue-50 p-3 rounded-md">
           {state.language === 'ko' ? (
             <>
               <strong>페이지 방향:</strong> 캘린더 방향에 따라 자동 설정됩니다.
@@ -127,7 +127,7 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
         <Button
           onClick={handleExport}
           disabled={isGenerating}
-          className="w-full"
+          className="w-full text-xl h-14"
           size="lg"
         >
           {isGenerating

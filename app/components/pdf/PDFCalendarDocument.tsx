@@ -1,5 +1,6 @@
 import React from 'react';
 import { Document, Page, View, Text } from '@react-pdf/renderer';
+import type { PageProps } from '@react-pdf/renderer';
 import { PDFConfig, YearCalendarData, Language, CalendarOrientation } from '@/types';
 import { getPaperDimensions } from '@/lib/pdf/paperSizes';
 import { createPDFStyles } from '@/lib/pdf/pdfStyles';
@@ -12,6 +13,12 @@ interface PDFCalendarDocumentProps {
   calendarOrientation: CalendarOrientation;
   dayInputs: Map<string, string>;
 }
+
+// Map our paper size names to @react-pdf/renderer's expected format
+const mapPaperSize = (size: PDFConfig['paperSize']): PageProps['size'] => {
+  if (size === 'Letter') return 'LETTER';
+  return size; // A4, B4, A3 are already uppercase
+};
 
 export function PDFCalendarDocument({
   calendarData,
@@ -30,44 +37,39 @@ export function PDFCalendarDocument({
   const isHorizontal = calendarOrientation === 'horizontal';
   const monthsPerPage = config.layout === 'single' ? 12 : 6;
 
-  // Label column width multiplier
-  const labelWidthMultiplier = 1.2; // Reduced to give more space to content
+  // Fixed label widths instead of proportional multiplier
+  // This maximizes space for calendar cells and minimizes whitespace
+  const monthLabelWidth = language === 'ko' ? 45 : 55; // Width for month names (wider for English)
+  const dayLabelWidth = 25; // Width for day numbers (1-31)
 
-  let cellSize: number;
+  let cellWidth: number;
+  let cellHeight: number;
   let labelCellWidth: number;
 
   if (isHorizontal) {
     // Horizontal: 31 day columns + 1 month label column
     const dayCols = 31;
+    const headerHeight = 0.75; // Header size multiplier (increased to prevent overflow)
 
-    // Calculate based on width constraint
-    const widthBasedCellSize = contentWidth / (dayCols + labelWidthMultiplier);
-
-    // Calculate based on height constraint (fill entire height)
-    const headerHeight = 0.5; // Smaller header
-    const heightBasedCellSize = contentHeight / (monthsPerPage + headerHeight);
-
-    // Use the smaller one to ensure it fits
-    cellSize = Math.min(widthBasedCellSize, heightBasedCellSize);
-    labelCellWidth = cellSize * labelWidthMultiplier;
+    // Use independent width and height to fill entire page (rectangular cells)
+    cellWidth = (contentWidth - monthLabelWidth) / dayCols;
+    cellHeight = contentHeight / (monthsPerPage + headerHeight);
+    labelCellWidth = monthLabelWidth;
   } else {
     // Vertical: month columns + 1 day label column
     const monthCols = monthsPerPage;
+    const headerHeight = 0.5; // Header size multiplier
 
-    // Calculate based on width constraint (fill entire width)
-    const widthBasedCellSize = contentWidth / (monthCols + labelWidthMultiplier);
-
-    // Calculate based on height constraint
-    const headerHeight = 0.5; // Smaller header
-    const heightBasedCellSize = contentHeight / (31 + headerHeight);
-
-    // Use the smaller one to ensure it fits
-    cellSize = Math.min(widthBasedCellSize, heightBasedCellSize);
-    labelCellWidth = cellSize * labelWidthMultiplier;
+    // Use independent width and height to fill entire page (rectangular cells)
+    cellWidth = (contentWidth - dayLabelWidth) / monthCols;
+    cellHeight = contentHeight / (31 + headerHeight);
+    labelCellWidth = dayLabelWidth;
   }
 
-  const fontSize = Math.max(5, Math.min(cellSize / 6, 9));
-  const styles = createPDFStyles(cellSize, fontSize, language === 'ko');
+  // Font size based on the smaller dimension to ensure readability
+  const minDimension = Math.min(cellWidth, cellHeight);
+  const fontSize = Math.max(5, Math.min(minDimension / 6, 9));
+  const styles = createPDFStyles(cellWidth, cellHeight, fontSize, language === 'ko');
 
   // Split months for two-page layout
   const monthGroups =
@@ -78,7 +80,7 @@ export function PDFCalendarDocument({
   return (
     <Document>
       {monthGroups.map((months, pageIndex) => (
-        <Page key={pageIndex} size={config.paperSize} orientation={config.orientation} style={styles.page}>
+        <Page key={pageIndex} size={mapPaperSize(config.paperSize)} orientation={config.orientation} style={styles.page}>
           {/* Title */}
           <Text style={styles.title}>
             {calendarData.year} {language === 'ko' ? '연간 캘린더' : 'Yearly Calendar'}
@@ -91,7 +93,6 @@ export function PDFCalendarDocument({
             <HorizontalCalendar
               months={months}
               styles={styles}
-              cellSize={cellSize}
               labelCellWidth={labelCellWidth}
               dayInputs={dayInputs}
               language={language}
@@ -100,7 +101,6 @@ export function PDFCalendarDocument({
             <VerticalCalendar
               months={months}
               styles={styles}
-              cellSize={cellSize}
               labelCellWidth={labelCellWidth}
               dayInputs={dayInputs}
               language={language}
@@ -113,14 +113,21 @@ export function PDFCalendarDocument({
 }
 
 // Horizontal Layout Component (Months as rows)
+interface CalendarLayoutProps {
+  months: any[];
+  styles: any;
+  labelCellWidth: number;
+  dayInputs: Map<string, string>;
+  language: Language;
+}
+
 function HorizontalCalendar({
   months,
   styles,
-  cellSize,
   labelCellWidth,
   dayInputs,
   language,
-}: any) {
+}: CalendarLayoutProps) {
   return (
     <View style={styles.table}>
       {/* Header row with day numbers */}
@@ -180,11 +187,10 @@ function HorizontalCalendar({
 function VerticalCalendar({
   months,
   styles,
-  cellSize,
   labelCellWidth,
   dayInputs,
   language,
-}: any) {
+}: CalendarLayoutProps) {
   return (
     <View style={styles.table}>
       {/* Header row with month names */}

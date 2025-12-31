@@ -64,16 +64,23 @@ export function DayCell({ cell }: DayCellProps) {
 
   // Determine background color based on weekend and holiday
   const bgColor = cell.holiday
-    ? 'bg-pink-50' // Holiday (pink takes priority)
+    ? 'bg-pink-50' // Holiday (soft pink pastel)
     : cell.isWeekend
-    ? 'bg-blue-50' // Weekend
+    ? 'bg-blue-50' // Weekend (soft blue pastel)
     : 'bg-white'; // Regular day
 
   const borderColor = cell.holiday
-    ? 'border-pink-200'
+    ? 'border-gray-300'
     : cell.isWeekend
-    ? 'border-blue-200'
+    ? 'border-gray-300'
     : 'border-gray-200';
+
+  // Left border accent
+  const leftBorderAccent = cell.holiday
+    ? 'border-l-4 border-l-red-500'
+    : cell.isWeekend
+    ? 'border-l-4 border-l-blue-500'
+    : '';
 
   // Get holiday name in current language
   const holidayName = cell.holiday
@@ -82,14 +89,14 @@ export function DayCell({ cell }: DayCellProps) {
 
   return (
     <div
-      className={`border ${borderColor} ${bgColor} min-h-[60px] min-w-[60px] p-1 flex flex-col relative group hover:shadow-sm transition-shadow`}
+      className={`border ${borderColor} ${bgColor} ${leftBorderAccent} min-h-[60px] min-w-[60px] p-1.5 flex flex-col relative group hover:shadow-md transition-shadow`}
     >
       {/* Day number */}
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-semibold text-gray-700">{cell.dayOfMonth}</span>
+        <span className="text-lg font-bold text-gray-800">{cell.dayOfMonth}</span>
         {cell.holiday && (
           <span
-            className="text-[8px] text-pink-600 font-medium truncate max-w-[40px]"
+            className="text-xs text-red-600 font-bold truncate max-w-[40px]"
             title={holidayName || ''}
           >
             {holidayName}
@@ -102,7 +109,7 @@ export function DayCell({ cell }: DayCellProps) {
         value={localValue}
         onChange={handleChange}
         placeholder=""
-        className={`flex-1 text-[10px] resize-none border-none outline-none ${bgColor} focus:ring-1 focus:ring-blue-400 rounded p-0.5 w-full`}
+        className={`flex-1 text-sm resize-none border-none outline-none ${bgColor} focus:ring-2 focus:ring-blue-500 rounded p-0.5 w-full`}
         rows={2}
         maxLength={100}
       />

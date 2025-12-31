@@ -20,13 +20,13 @@ export function YearlyCalendar() {
         <div className="inline-block min-w-max">
           {/* Header row with day numbers */}
           <div className="flex mb-1">
-            <div className="w-24 flex-shrink-0 font-semibold text-sm p-2 bg-gray-100 border border-gray-300">
+            <div className="w-24 flex-shrink-0 font-bold text-2xl p-2 bg-slate-700 text-white border border-slate-600">
               {state.language === 'ko' ? '월' : 'Month'}
             </div>
             {Array.from({ length: 31 }, (_, i) => (
               <div
                 key={i}
-                className="min-w-[60px] w-[60px] flex-shrink-0 font-semibold text-xs text-center p-1 bg-gray-100 border border-gray-300"
+                className="min-w-[60px] w-[60px] flex-shrink-0 font-bold text-lg text-center p-1 bg-slate-700 text-white border border-slate-600"
               >
                 {i + 1}
               </div>
@@ -37,7 +37,7 @@ export function YearlyCalendar() {
           {calendarData.months.map((month) => (
             <div key={month.monthIndex} className="flex mb-0">
               {/* Month label */}
-              <div className="w-24 flex-shrink-0 font-semibold text-sm flex items-center justify-center p-2 bg-gray-50 border border-gray-300">
+              <div className="w-24 flex-shrink-0 font-bold text-2xl flex items-center justify-center p-2 border-[1.5px] border-gray-300 bg-gray-100">
                 {month.monthName}
               </div>
 
@@ -60,13 +60,13 @@ export function YearlyCalendar() {
       <div className="inline-block min-w-max">
         {/* Header row with month names */}
         <div className="flex mb-1">
-          <div className="w-16 flex-shrink-0 font-semibold text-sm p-2 bg-gray-100 border border-gray-300">
+          <div className="w-16 flex-shrink-0 font-bold text-2xl p-2 bg-slate-700 text-white border border-slate-600">
             {state.language === 'ko' ? '일' : 'Day'}
           </div>
           {calendarData.months.map((month) => (
             <div
               key={month.monthIndex}
-              className="min-w-[80px] w-[80px] flex-shrink-0 font-semibold text-xs text-center p-2 bg-gray-100 border border-gray-300"
+              className="min-w-[80px] w-[80px] flex-shrink-0 font-bold text-lg text-center p-2 border border-gray-300 text-gray-800 bg-gray-100"
             >
               {month.monthName}
             </div>
@@ -77,7 +77,7 @@ export function YearlyCalendar() {
         {Array.from({ length: 31 }, (_, dayIndex) => (
           <div key={dayIndex} className="flex mb-0">
             {/* Day number label */}
-            <div className="w-16 flex-shrink-0 font-semibold text-sm flex items-center justify-center p-2 bg-gray-50 border border-gray-300">
+            <div className="w-16 flex-shrink-0 font-bold text-2xl flex items-center justify-center p-2 bg-gray-100 border-[1.5px] border-gray-300">
               {dayIndex + 1}
             </div>
 

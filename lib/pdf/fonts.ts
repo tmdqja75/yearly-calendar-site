@@ -1,19 +1,32 @@
 import { Font } from '@react-pdf/renderer';
 
-// Register Korean font from local file
-// Font file is served from /public/fonts/NanumGothic.ttf
+// Register Dongle font from local files
+// Font files are served from /public/fonts/
 try {
   Font.register({
-    family: 'NanumGothic',
-    src: '/fonts/NanumGothic.ttf',
+    family: 'Dongle',
+    fonts: [
+      {
+        src: '/fonts/Dongle-Light.ttf',
+        fontWeight: 300,
+      },
+      {
+        src: '/fonts/Dongle-Regular.ttf',
+        fontWeight: 400,
+      },
+      {
+        src: '/fonts/Dongle-Bold.ttf',
+        fontWeight: 700,
+      },
+    ],
   });
 
   // Register fallback for hyphenation
   Font.registerHyphenationCallback((word) => [word]);
 
-  console.log('Korean fonts (NanumGothic) registered successfully from local file');
+  console.log('Dongle fonts registered successfully from local files');
 } catch (error) {
-  console.error('Failed to register Korean fonts:', error);
+  console.error('Failed to register Dongle fonts:', error);
   // Fallback to Helvetica
   Font.registerHyphenationCallback((word) => [word]);
 }

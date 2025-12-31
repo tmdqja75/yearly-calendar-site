@@ -16,9 +16,9 @@ export function CalendarHeader() {
   const { state, setYear, setLanguage, setOrientation } = useCalendar();
 
   return (
-    <div className="flex flex-wrap items-center gap-4 p-4 bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+    <div className="flex flex-wrap items-center gap-4 p-4 bg-gradient-to-r from-slate-50 to-blue-50 border-b-4 border-slate-700 sticky top-0 z-10 shadow-md">
       {/* Title */}
-      <h1 className="text-2xl font-bold text-gray-900">
+      <h1 className="text-4xl font-bold text-slate-900 tracking-wide">
         {state.language === 'ko' ? '연간 캘린더' : 'Yearly Calendar'} {state.selectedYear}
       </h1>
 
@@ -26,19 +26,19 @@ export function CalendarHeader() {
 
       {/* Year selector */}
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-xl font-medium text-gray-700">
           {TRANSLATIONS[state.language].ui.yearSelector}:
         </span>
         <Select
           value={state.selectedYear.toString()}
           onValueChange={(val) => setYear(parseInt(val))}
         >
-          <SelectTrigger className="w-[120px]">
+          <SelectTrigger className="w-[140px] text-lg h-12">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {Array.from({ length: 25 }, (_, i) => 2026 + i).map((year) => (
-              <SelectItem key={year} value={year.toString()}>
+              <SelectItem key={year} value={year.toString()} className="text-lg">
                 {year}
               </SelectItem>
             ))}
@@ -52,6 +52,7 @@ export function CalendarHeader() {
         onClick={() =>
           setOrientation(state.orientation === 'horizontal' ? 'vertical' : 'horizontal')
         }
+        className="text-lg h-12 px-6"
       >
         {state.orientation === 'horizontal' ? (
           <>
@@ -70,6 +71,7 @@ export function CalendarHeader() {
       <Button
         variant="outline"
         onClick={() => setLanguage(state.language === 'ko' ? 'en' : 'ko')}
+        className="text-lg h-12 px-6"
       >
         {TRANSLATIONS[state.language].ui.languageToggle}
       </Button>

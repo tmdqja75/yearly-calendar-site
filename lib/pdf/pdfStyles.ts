@@ -1,8 +1,8 @@
 import { StyleSheet } from '@react-pdf/renderer';
 
-export const createPDFStyles = (cellSize: number, fontSize: number, useKoreanFont: boolean = true) => {
-  // Use NanumGothic for Korean support, Helvetica as fallback
-  const fontFamily = useKoreanFont ? 'NanumGothic' : 'Helvetica';
+export const createPDFStyles = (cellWidth: number, cellHeight: number, fontSize: number, useKoreanFont: boolean = true) => {
+  // Use Dongle font for all languages
+  const fontFamily = 'Dongle';
 
   return StyleSheet.create({
     page: {
@@ -11,11 +11,13 @@ export const createPDFStyles = (cellSize: number, fontSize: number, useKoreanFon
       fontFamily,
     },
     title: {
-      fontSize: fontSize * 1.8,
+      fontSize: fontSize * 2.5,
       fontWeight: 'bold',
-      marginBottom: 10,
+      marginBottom: 16,
       textAlign: 'center',
       fontFamily,
+      color: '#0f172a',
+      letterSpacing: 0.5,
     },
     table: {
       width: '100%',
@@ -24,55 +26,57 @@ export const createPDFStyles = (cellSize: number, fontSize: number, useKoreanFon
       flexDirection: 'row',
     },
     headerCell: {
-      width: cellSize,
-      height: cellSize * 0.6,
-      backgroundColor: '#f3f4f6',
-      border: '1px solid #d1d5db',
+      width: cellWidth,
+      height: cellHeight * 0.6,
+      backgroundColor: '#334155',
+      border: '1px solid #475569',
       padding: 4,
       justifyContent: 'center',
       alignItems: 'center',
     },
     monthLabelCell: {
       // width is set dynamically
-      height: cellSize,
+      height: cellHeight,
       backgroundColor: '#f9fafb',
-      border: '1px solid #d1d5db',
+      border: '1.5px solid #e5e7eb',
       padding: 4,
       justifyContent: 'center',
       alignItems: 'center',
     },
     headerText: {
-      fontSize: fontSize * 0.9,
+      fontSize: fontSize * 1.5,
       fontWeight: 'bold',
-      color: '#374151',
+      color: '#ffffff',
       fontFamily,
     },
     monthText: {
-      fontSize: fontSize,
+      fontSize: fontSize * 1.5,
       fontWeight: 'bold',
-      color: '#111827',
+      color: '#0f172a',
       fontFamily,
     },
     cell: {
-      width: cellSize,
-      height: cellSize,
-      border: '1px solid #d1d5db',
-      padding: 2,
+      width: cellWidth,
+      height: cellHeight,
+      border: '1px solid #e5e7eb',
+      padding: 3,
       backgroundColor: '#ffffff',
     },
     cellWeekend: {
       backgroundColor: '#e0f2fe',
+      borderLeft: '3px solid #3b82f6',
     },
     cellHoliday: {
       backgroundColor: '#fce7f3',
+      borderLeft: '3px solid #ef4444',
     },
     cellEmpty: {
       backgroundColor: '#f9fafb',
     },
     dayNumber: {
-      fontSize: fontSize * 0.7,
+      fontSize: fontSize * 0.8,
       fontWeight: 'bold',
-      color: '#6b7280',
+      color: '#1f2937',
       marginBottom: 2,
       fontFamily,
     },
@@ -83,8 +87,9 @@ export const createPDFStyles = (cellSize: number, fontSize: number, useKoreanFon
       fontFamily,
     },
     holidayName: {
-      fontSize: fontSize * 0.5,
-      color: '#ec4899',
+      fontSize: fontSize * 0.55,
+      color: '#dc2626',
+      fontWeight: 'bold',
       marginBottom: 2,
       fontFamily,
     },

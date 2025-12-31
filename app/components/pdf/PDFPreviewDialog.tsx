@@ -43,10 +43,10 @@ export function PDFPreviewDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh]">
+      <DialogContent className="max-w-[98vw] w-[98vw] h-[95vh]">
         <DialogHeader>
-          <DialogTitle>{TRANSLATIONS[language].ui.preview}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-2xl">{TRANSLATIONS[language].ui.preview}</DialogTitle>
+          <DialogDescription className="text-lg">
             {language === 'ko'
               ? 'PDF 미리보기입니다. 다운로드하시겠습니까?'
               : 'Preview your PDF. Would you like to download it?'}
@@ -58,12 +58,12 @@ export function PDFPreviewDialog({
           {previewUrl ? (
             <iframe
               src={previewUrl}
-              className="w-full h-full min-h-[500px]"
+              className="w-full h-full min-h-[700px]"
               title="PDF Preview"
             />
           ) : (
             <div className="flex items-center justify-center h-full">
-              <p className="text-gray-500">
+              <p className="text-lg text-gray-500">
                 {language === 'ko' ? '미리보기를 로드하는 중...' : 'Loading preview...'}
               </p>
             </div>
@@ -71,10 +71,10 @@ export function PDFPreviewDialog({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="text-lg h-12 px-6">
             {TRANSLATIONS[language].ui.cancel}
           </Button>
-          <Button onClick={onConfirmDownload}>
+          <Button onClick={onConfirmDownload} className="text-lg h-12 px-6">
             {TRANSLATIONS[language].ui.download}
           </Button>
         </DialogFooter>

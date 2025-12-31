@@ -85,34 +85,44 @@ interface CalendarProviderProps {
 
 // Provider component
 export function CalendarProvider({ children }: CalendarProviderProps) {
-  const [state, dispatch] = useReducer(calendarReducer, initialState, (initial) => {
-    // Load from localStorage on initial render (client-side only)
-    if (typeof window === 'undefined') {
-      return initial;
-    }
+  const [state, dispatch] = useReducer(calendarReducer, initialState);
+  const [isHydrated, setIsHydrated] = React.useState(false);
+
+  // Load from localStorage after hydration (client-side only)
+  useEffect(() => {
+    if (isHydrated) return; // Only run once
 
     try {
       const savedYear = localStorage.getItem('calendar-year');
       const savedLanguage = localStorage.getItem('calendar-language');
       const savedOrientation = localStorage.getItem('calendar-orientation');
-      const savedInputsJson = localStorage.getItem(`calendar-inputs-${initial.selectedYear}`);
 
-      const savedInputs = savedInputsJson
-        ? new Map(JSON.parse(savedInputsJson))
-        : new Map();
+      if (savedYear) {
+        dispatch({ type: 'SET_YEAR', payload: parseInt(savedYear) });
+      }
+      if (savedLanguage) {
+        dispatch({ type: 'SET_LANGUAGE', payload: savedLanguage as Language });
+      }
+      if (savedOrientation) {
+        dispatch({ type: 'SET_ORIENTATION', payload: savedOrientation as CalendarOrientation });
+      }
 
-      return {
-        ...initial,
-        selectedYear: savedYear ? parseInt(savedYear) : initial.selectedYear,
-        language: (savedLanguage as Language) || initial.language,
-        orientation: (savedOrientation as CalendarOrientation) || initial.orientation,
-        dayInputs: savedInputs,
-      };
+      // Load day inputs for the saved year
+      const yearToLoad = savedYear ? parseInt(savedYear) : initialState.selectedYear;
+      const savedInputsJson = localStorage.getItem(`calendar-inputs-${yearToLoad}`);
+      if (savedInputsJson) {
+        const savedInputsArray = JSON.parse(savedInputsJson);
+        savedInputsArray.forEach(([dateKey, value]: [string, string]) => {
+          dispatch({ type: 'UPDATE_DAY_INPUT', payload: { dateKey, value } });
+        });
+      }
+
+      setIsHydrated(true);
     } catch (error) {
       console.error('Failed to load calendar data from localStorage:', error);
-      return initial;
+      setIsHydrated(true);
     }
-  });
+  }, [isHydrated]);
 
   // Load holidays when year changes
   useEffect(() => {
@@ -120,9 +130,9 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
     dispatch({ type: 'SET_HOLIDAYS', payload: holidays });
   }, [state.selectedYear]);
 
-  // Save to localStorage when state changes
+  // Save to localStorage when state changes (only after hydration)
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || !isHydrated) return;
 
     try {
       localStorage.setItem('calendar-year', state.selectedYear.toString());
@@ -135,7 +145,7 @@ export function CalendarProvider({ children }: CalendarProviderProps) {
     } catch (error) {
       console.error('Failed to save calendar data to localStorage:', error);
     }
-  }, [state.selectedYear, state.language, state.orientation, state.dayInputs]);
+  }, [state.selectedYear, state.language, state.orientation, state.dayInputs, isHydrated]);
 
   // Context value
   const value: CalendarContextType = {
