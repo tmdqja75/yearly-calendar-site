@@ -36,7 +36,7 @@ export interface YearCalendarData {
 
 // PDF configuration
 export interface PDFConfig {
-  paperSize: 'A4' | 'B4' | 'A3' | 'Letter';
+  paperSize: 'A4' | 'B4' | 'A3' | 'A1' | 'Letter';
   layout: 'single' | 'two-page'; // All 12 months OR Jan-Jun/Jul-Dec
   orientation: 'portrait' | 'landscape'; // Page orientation, not calendar orientation
   year: number;

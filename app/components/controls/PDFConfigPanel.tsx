@@ -72,6 +72,7 @@ export function PDFConfigPanel({ onExport, isGenerating }: PDFConfigPanelProps) 
             <SelectContent>
               <SelectItem value="A4" className="text-lg">A4 (210 × 297 mm)</SelectItem>
               <SelectItem value="A3" className="text-lg">A3 (297 × 420 mm)</SelectItem>
+              <SelectItem value="A1" className="text-lg">A1 (594 × 841 mm)</SelectItem>
               <SelectItem value="B4" className="text-lg">B4 (250 × 353 mm)</SelectItem>
               <SelectItem value="Letter" className="text-lg">Letter (8.5 × 11 in)</SelectItem>
             </SelectContent>

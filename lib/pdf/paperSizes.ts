@@ -4,7 +4,7 @@ import { PaperDimensions } from '@/types';
  * Paper sizes in points (72 DPI)
  * 1 inch = 72 points
  */
-export const PAPER_SIZES: Record<'A4' | 'B4' | 'A3' | 'Letter', PaperDimensions> = {
+export const PAPER_SIZES: Record<'A4' | 'B4' | 'A3' | 'A1' | 'Letter', PaperDimensions> = {
   A4: {
     width: 595, // 210mm
     height: 842, // 297mm
@@ -16,6 +16,10 @@ export const PAPER_SIZES: Record<'A4' | 'B4' | 'A3' | 'Letter', PaperDimensions>
   A3: {
     width: 842, // 297mm
     height: 1191, // 420mm
+  },
+  A1: {
+    width: 1684, // 594mm
+    height: 2384, // 841mm
   },
   Letter: {
     width: 612, // 8.5 inches

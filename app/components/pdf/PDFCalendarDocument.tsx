@@ -15,8 +15,17 @@ interface PDFCalendarDocumentProps {
 }
 
 // Map our paper size names to @react-pdf/renderer's expected format
-const mapPaperSize = (size: PDFConfig['paperSize']): PageProps['size'] => {
+// For custom sizes (A1), we return dimensions with orientation already applied
+const mapPaperSize = (size: PDFConfig['paperSize'], orientation: 'portrait' | 'landscape'): PageProps['size'] => {
   if (size === 'Letter') return 'LETTER';
+  if (size === 'A1') {
+    // A1 is not a standard size in @react-pdf/renderer, use custom dimensions
+    // Apply orientation here since we can't use orientation prop with custom sizes
+    if (orientation === 'landscape') {
+      return { width: 2384, height: 1684 }; // Landscape: 841mm × 594mm
+    }
+    return { width: 1684, height: 2384 }; // Portrait: 594mm × 841mm
+  }
   return size; // A4, B4, A3 are already uppercase
 };
 
@@ -77,10 +86,19 @@ export function PDFCalendarDocument({
       ? [calendarData.months.slice(0, 6), calendarData.months.slice(6, 12)]
       : [calendarData.months];
 
+  // For A1, size already includes orientation, so don't pass orientation prop
+  const isCustomSize = config.paperSize === 'A1';
+  const pageSize = mapPaperSize(config.paperSize, config.orientation);
+
   return (
     <Document>
       {monthGroups.map((months, pageIndex) => (
-        <Page key={pageIndex} size={mapPaperSize(config.paperSize)} orientation={config.orientation} style={styles.page}>
+        <Page
+          key={pageIndex}
+          size={pageSize}
+          {...(!isCustomSize && { orientation: config.orientation })}
+          style={styles.page}
+        >
           {/* Title */}
           <Text style={styles.title}>
             {calendarData.year} {language === 'ko' ? '연간 캘린더' : 'Yearly Calendar'}
